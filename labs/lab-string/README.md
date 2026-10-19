@@ -277,7 +277,7 @@ Los tests de `IsEmpty` ya están activos en `StringTest.c`. Corré `make test` y
 
 **P1** — `IsEmpty` podría haberse escrito también como `return s[0] == '\0'`. ¿Son equivalentes? ¿Por qué?
 
-> R:
+> R: Si, s[0] y *s son equivalentes, ambos acceden al primer caracter de la cadena
 
 ---
 
@@ -328,11 +328,11 @@ make test
 
 **P2** — ¿Qué hace `s + 1`? ¿Por qué avanza al siguiente carácter y no al siguiente byte?
 
-> R: 
+> R: En este caso avanzar al siguiente caracter y al siguiente byte es lo mismo. s + 1 significa "avanzar sizeof(*s)" y como *s es un char, sizeof(*s) == 1
 
 **P3** — Si llamaras a `GetLength(NULL)`, ¿qué pasaría? ¿Por qué las precondiciones del contrato dicen `s != NULL`?
 
-> R: 
+> R: Si s == NULL, *s trataría de leer una direción inexistente y produciría un comportamiento indefinido
 
 ```
 GETLENGTH_PASA=SI
@@ -367,7 +367,7 @@ El `while` termina cuando alguna de las dos cadenas llega a `'\0'`. Después dev
 
 **P4** — ¿Qué dos casos están mal cubiertos por `return 1`? Describí un ejemplo para cada uno.
 
-> R:
+> R: el while termina cuando una de las cadenas esté vacía, esto podría devolver 1 erróneamente cuando una de las cadenas sea más larga que la otra pero coincidan en caracteres, por ejemplo "hol" y "hola"
 
 #### Corrección
 
@@ -414,7 +414,7 @@ int AreDecimalDigits(const char *s) {
 
 **P5** — ¿Por qué la cadena vacía no debería considerarse un conjunto de dígitos decimales? Pensalo desde la especificación matemática.
 
-> R:
+> R: La cadena vacía no represetna un número, no es lo mismo '' que '0'
 
 #### Corrección
 
@@ -652,7 +652,7 @@ make suma
 ```
 
 ```
-SUMA_PASA=
+SUMA_PASA=SI
 ```
 _(SI o NO)_
 
@@ -662,15 +662,15 @@ _(SI o NO)_
 
 **P10** — `GetLength` es recursiva pero en C una llamada recursiva consume un stack frame. Si llamaras `GetLength` con un string de 1.000.000 de caracteres, ¿qué pasaría? ¿Cómo lo resolverías?
 
-> R:
+> R: con un string de 1.000.000 de caracteres la función crearía un millón de stack frames, lo que probablemente agotaría la pila. Una solución sería definir la función de manera iterativa con un contador
 
 **P11** — En la Parte III, todos los programas usan `char **arg` para iterar en vez de un índice entero. ¿Qué ventaja tiene este estilo? ¿Cuándo sería preferible usar el índice?
 
-> R:
+> R: Con este estilo podes iterar sobre los argumentos hasta que se terminen y no necesitas recuperar la cantidad de argumentos ingresados. Conviene user el ínidce cuando la cantidad de argumentos a ingresar es limitada
 
 **P12** — En C, `"hola"` es un literal de tipo `const char *`. Si intentaras modificar un carácter con `s[0] = 'H'`, el comportamiento es indefinido. ¿Por qué? ¿En qué parte de la memoria viven los literales?
 
-> R:
+> R: tiene comportamiento indefinido porque el estándar de C establece que un literal cadena no debe modificarse. Normalmente los literales suelen ubicarse en una sección de solo lectura del ejecutable, por eso s[0] = 'H' fallaría
 
 ---
 
